@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Simple Bitcoin Message sign tool</title>
+    <style media="screen">
+      textarea{display: block;width: 100%}
+    </style>
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="bitcoinjs.min.js"></script>
+    <script type="text/javascript">
+      function make() {
+        console.log("making...");
+        try {
+          var keyPair = bitcoin.ECPair.fromWIF($('#privatekeyWIF').val());
+          var address = keyPair.getAddress();
+          $('#address').html(address);
+          var message = $('#message').val();
+          var signature_str = bitcoin.message.sign(bitcoin.ECPair.fromWIF($('#privatekeyWIF').val()), message).toString('base64')
+        } catch (e) {
+          alert(e.message);
+        }
+
+
+        $('#signatureStr').val(signature_str);
+        console.log(signature_str);
+      }
+      $(document).ready(function(){
+        $('#make').click(function(){
+          make();
+        })
+      })
+    </script>
+  </head>
+  <body>
+    <div class="">
+      <label for="privatekeyWIF">PrivatekeyWIF</label>
+      <textarea rows="2" cols="40" id="privatekeyWIF"></textarea>
+      <span id='address'></span>
+    </div>
+    <div class="">
+      <label for="message">Message</label>
+      <textarea  rows="5" cols="40" id="message"></textarea>
+    </div>
+    <div class="">
+      <button type="button" name="button" id="make">sign</button>
+    </div>
+    <hr>
+    <div id="summary">Signature</div>
+    <textarea rows="4" cols="40" id="signatureStr"></textarea>
+  </body>
+</html>
